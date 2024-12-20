@@ -1,0 +1,68 @@
+{
+    "id": "org.c9.function.bio.autoprotocol_factory",
+    "name": "Autoprotocol Factory",
+    "description": "Generates robotic protocols from LabSheets or ConstructionFiles.",
+    "type": "function",
+    "keywords": ["autoprotocol", "lab automation", "bioinformatics", "PCR", "construction file", "LabPlanner", "LabSheet"],
+    "date_created": "2024-12-17T00:00:00Z",
+    "date_last_modified": "2024-12-17T00:00:00Z",
+    "inputs": [
+      {
+        "name": "input_data",
+        "type": "object",
+        "description": "A LabSheet or ConstructionFile object. This input determines the type of reaction to generate."
+      }
+    ],
+    "outputs": [
+      {
+        "type": "object",
+        "description": "Autoprotocol JSON object for robotic execution, including refs, instructions, and constraints."
+      }
+    ],
+    "examples": [
+      {
+        "input": {
+          "input_data": "ref:org.c9.datum.bio.labsheet.pcr_example"
+        },
+        "output": {
+          "refs": {
+            "water": {"id": "ct1", "discard": true},
+            "plate": {"id": "ct2", "store": {"where": "ambient"}}
+          },
+          "instructions": [
+            {
+              "op": "liquid_handle",
+              "groups": [
+                {
+                  "transfers": [
+                    {"from": "water", "to": "plate/A1", "volume": "10:microliter"}
+                  ]
+                }
+              ]
+            },
+            {
+              "op": "thermocycle",
+              "groups": [
+                {
+                  "cycles": 30,
+                  "steps": [
+                    {"temperature": 98, "duration": "30s"},
+                    {"temperature": 58, "duration": "30s"},
+                    {"temperature": 72, "duration": "30s"}
+                  ]
+                }
+              ],
+              "thermocycler": "default"
+            }
+          ],
+          "constraints": {}
+        }
+      }
+    ],
+    "execution_details": {
+      "language": "python",
+      "source": "AutopprotocolFactory.py",
+      "invocation": "AutoProtocolFactory.run"
+    }
+  }
+  

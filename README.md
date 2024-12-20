@@ -1,109 +1,69 @@
+## adapted from @jessicajxlin BioE140L-LabPlanner
 
-# BioE 134 Final Project Submission
+everything beneath this these 3 text blocks is largley the same
 
-## Project Overview
+### changes
+- added pytest in tests/unit to confirm preexisting functionality and more features 
+--- the first 3 files are not tests but related to the cleanup of the tests/data that would pile up quickly while making test_Experiments
+- in utils, serialization.py and write_out.py were the closest i got to my goal(s)
 
-This project provides two core bioinformatics utilities: 
 
-1. **Reverse Complement (revcomp)**: Calculates the reverse complement of a DNA sequence.
-2. **Translate**: Translates a DNA sequence into a protein sequence according to the standard genetic code.
+### goals and how they shifted
+- originally wanted to minimally change this working project and only extend it in the direction of using Autoprotocol's protocol methods to make JSON styled robotic instructions 
+- first approach was to inverse 'Serializer.py' with 'deserializer.py' to try to get a set of deserialized lab instructions from LabSheets. having both would also satisfy some good testing as we could use them to validate each other.
+- second approach was to pass over a complete Experiment instance along with a metadata.txt file associated with that instance, then trying to shape that into JSON, but the Experiment -> metadata -> JSON translations had too many formatting issues. along the way the issue of ConstructionFiles and their parsing would surface a lot. 
+- third approach nuked a lot of the capabilities of main.py, since the preexisting Serializer.py is getting replaced by serialization.py and write_out.py. serialization.py handles the dataclass -> dict and dict -> dataclass, although not in class methods yet. write_out.py handles all of the output of human_readable.txt files associated with an Experiment as well as the JSON format required by autoprotocol's api by importing serialization.py's serialize and deserialize functions. They need to be tested to handle all of the dataclasses or enum classes found in this file to be foolproof.
 
-These functions are implemented in **Python** and are part of the broader bioinformatics toolset aimed at automating genetic sequence analysis tasks.
+### State
+- Not working due to multiple util files that approximate the same things that could and should be unified into at least 2 maybe 3 files
+- autoprotocol_factory, my original goal of extending somewhat, is largely unchanged, as well as oligo_list_factory
+- some of the tests that do exist probably deserved to be deleted since the rely on methods from my first and second approaches
+- no functional c9 wrapper
 
----
 
-## Scope of Work
 
-As part of the final project for BioE 134, I developed two functions that are foundational for sequence analysis:
 
-1. **Reverse Complement**: This function returns the reverse complement of a DNA sequence, which is an essential task in many genetic analysis pipelines.
-   
-2. **Translate**: This function translates a DNA sequence into a corresponding protein sequence by converting each codon into its corresponding amino acid, based on the standard genetic code.
+# BioE140L-LabPlanner
 
-Both functions include input validation and error handling to ensure proper use. The reverse complement function raises an error for sequences containing invalid characters, while the translate function raises an error for sequences not divisible by three, as well as sequences containing invalid characters.
+## File Directory
 
----
+The descriptions here contain a general overview of the files. Each function should have a docstring with the specific inputs/outputs in the file itself.
 
-## Function Descriptions
+### Model Files
 
-### 1. Reverse Complement (`reverse_complement`)
+`Autoprotocol.py`, `Inventory.py`, `Experiment.py`, `LabPlanner.py` each contain basic classes with their associated fields. These files were left mostly unmodified, with the few exceptions below:
+* Gel, Zymo, Pick, and Miniprep steps were added to the LabPlanner file; even though these steps might not be explicitly included in construction files, these steps were added in the code for consistency/ease of use in other functions.
 
-- **Description**: This function takes a DNA sequence and returns its reverse complement. Only valid nucleotides (A, T, C, G) are allowed. The function raises a `ValueError` if invalid characters are found.
-- **Input**: A string representing the DNA sequence.
-- **Output**: A string representing the reverse complement of the input DNA sequence.
+### Factory Files
 
-**Example**:
-```python
-reverse_complement("ATGC")
-# Returns: "GCAT"
-```
+`ExperimentFactory.py`: This file contains the ExperimentFactory class. This class uses both the other factories to generate a new `Experiment` object when its `run` function is called.
 
-### 2. Translate (`translate`)
+`InventoryFactory.py`: This file contains the InventoryFactory class. When the `run` function is called, a new inventory is generated taking into account the old inventory; overall, this function generates new samples for each step while checking the previous inventory, and assigns them to new boxes.
 
-- **Description**: This function translates a DNA sequence into a corresponding protein sequence. The input sequence must be divisible by 3. If it contains invalid characters or is not a multiple of three, the function raises a `ValueError`. Stop codons are represented as underscores (`_`).
-- **Input**: A string representing the DNA sequence.
-- **Output**: A string representing the translated protein sequence.
+`LabPacketFactory.py`: This file contains the LabPacketFactory class. `LabSheet` objects are generated for each of the PCR, Ligate, Digest, Golden Gate, Gibson, and Transform, Zymo, Gel, Pick, and Miniprep steps, and compiled into a LabPacket.
 
-**Example**:
-```python
-translate("ATGGCC")
-# Returns: "MA"
-```
+`OligoListFactory.py`: This file contains the OligoListFactory class, but remains incomplete. 
 
----
 
-## Error Handling
+### Other Files
 
-### Reverse Complement
-- Raises `ValueError` if invalid characters (anything other than A, T, C, G) are present in the DNA sequence.
+`Parser.py`: This file is intended to contain functions for parsing various files. Currently, it parses boxes written in row form, as well as inventories.
 
-### Translate
-- Raises `ValueError` if the sequence contains invalid characters or if the sequence length is not a multiple of three.
+`Serializer.py`: This file contains functions for serializing different objects. Currently, it contains functions for serializing lab sheets/packets and boxes. 
 
----
+`main.py`: This file contains the code to be run. [See Instructions for Use].
 
-## Testing
+## Instructions for Use
 
-Both functions have been tested with standard, edge, and invalid input cases. A comprehensive suite of tests has been implemented using **pytest**.
+Code to be run should be written in `main.py`. `ConstructionFile` objects are created and a list of this `ConstructionFiles` is passed to the `ExperimentFactory`, which is created and run. The corresponding lab sheets and inventory are serialized, with the files being written to `out-inventory` and `out-labpacket` directories. For the inventory serialization, only the box is human-readable, and the dictionaries are not human-readable, but instead kept for easier parsing.
 
-- **Test File**: `tests/test_bio_functions.py`
+The box is re-serialized into `out-inventory` as `test.txt`, and the re-serialization of the box after parsing, when compared to the initial serialization, should be the same, demonstrating that the parsing and serialization functions for the box are accurate.
 
-The tests include:
-- Valid sequences
-- Sequences containing invalid characters
-- Sequences with lengths not divisible by three (for the translate function)
-- Palindromic sequences (for reverse complement)
-- Lowercase input handling
+## Limitations & Future Work
 
----
-
-## Usage Instructions
-
-Clone the repository and install the required dependencies listed in `requirements.txt`. The functions can be imported from the `bio_functions.py` module.
-
-**Example**:
-
-```bash
-pip install -r requirements.txt
-```
-
-Once installed, you can use the functions as follows:
-
-```python
-from bio_functions import reverse_complement, translate
-
-# Example DNA sequence
-dna_sequence = "ATGC"
-
-# Reverse complement
-print(reverse_complement(dna_sequence))
-
-# Translate
-print(translate("ATGGCC"))
-```
-
----
-
-## Conclusion
-
-These two functions provide foundational operations for working with DNA sequences in bioinformatics pipelines. They have been tested and documented, ensuring proper error handling and robust functionality.
+1. CF parser and simulator integration. Currently, the construction file steps are encoded explicitly in `main.py`, as opposed to being parsed from a construction file. Future integration with an existing parser, or future work in writing a parser would be necessary.
+2. Incomplete code. I chose to prioritize other factories to encode the essential functions of the original Lab Planner. Some of the factories/classes are incomplete, as listed below:
+  * OligoListFactory.
+  * Autoprotocol.
+  * Mastermixes.
+4. Testing. Basic testing has been done on the existing parsers/serializers, as well as the lab packet and inventory construction. Further testing would need to be done on other steps, as well as on a longer list of construction files.

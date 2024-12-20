@@ -1,0 +1,26 @@
+>name TestBox0
+>description materials
+>location materials
+>samples
+>label	sidelabel	concentration	construct	culture	clone
+A0	pSB1AK3-b0015dil	pSB1AK3-b0015dil	dil20x	pSB1AK3-b0015	None	 None
+A1	ca1067F	None	uM100	ca1067F	None	 None
+A2	10uM-ca1067F	10uM-ca1067F	uM10	ca1067F	None	 None
+A3	ca1067R	None	uM100	ca1067R	None	 None
+A4	10uM-ca1067R	10uM-ca1067R	uM10	ca1067R	None	 None
+A5	zTestID	zTestID-pcrpdt	zymo	pcrpdt	None	 None
+A6	dTestID	dTestID-pcrdig	zymo	pcrdig	None	 None
+A7	dTestID	dTestID-vectdig	zymo	vectdig	None	 None
+A8	lTestID	lTestID-pSB1A2-Bca9128	zymo	pSB1A2-Bca9128	None	 None
+B0	finalpdt-TestIDA	finalpdt-TestIDA	miniprep	finalpdt	primary	 TestIDA
+B1	finalpdt-TestIDB	finalpdt-TestIDB	miniprep	finalpdt	primary	 TestIDB
+B2	finalpdt-TestIDC	finalpdt-TestIDC	miniprep	finalpdt	primary	 TestIDC
+B3	finalpdt-TestIDD	finalpdt-TestIDD	miniprep	finalpdt	primary	 TestIDD
+B4	pSB1A2-I13521	pSB1A2-I13521	gene	pSB1A2-I13521	None	 None
+B5	pSB1A2-I13521dil	pSB1A2-I13521dil	dil20x	pSB1A2-I13521	None	 None
+B6	templatedil	templatedil	dil20x	template	None	 None
+B7	oligoF	None	uM100	oligoF	None	 None
+B8	10uM-oligoF	10uM-oligoF	uM10	oligoF	None	 None
+C0	oligoR	None	uM100	oligoR	None	 None
+C1	10uM-oligoR	10uM-oligoR	uM10	oligoR	None	 None
+C2	zTestID	zTestID-pcrOutput	zymo	pcrOutput	None	 None

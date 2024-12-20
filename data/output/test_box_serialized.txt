@@ -1,0 +1,13 @@
+>name main_just_pcrBox0
+>description materials
+>location materials
+>samples
+Label	SideLabel	Concentration	Construct	Culture	Clone
+A0	pSB1AK3-b0015dil	pSB1AK3-b0015dil	dil20x	pSB1AK3-b0015	None	None
+A1	ca1067F	None	uM100	ca1067F	None	None
+A2	10uM-ca1067F	10uM-ca1067F	uM10	ca1067F	None	None
+A3	ca1067R	None	uM100	ca1067R	None	None
+A4	10uM-ca1067R	10uM-ca1067R	uM10	ca1067R	None	None
+A5	zm_ID	zm_ID-pcrpdt	zymo	pcrpdt	None	None
+A6	pSB1A2-I13521	pSB1A2-I13521	gene	pSB1A2-I13521	None	None
+A7	pSB1A2-I13521dil	pSB1A2-I13521dil	dil20x	pSB1A2-I13521	None	None
